@@ -153,7 +153,8 @@
                     Remember me
                 </label>
             </div>
-            <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+            <button class="btn btn-primary w-100 py-2 my-2" type="submit">Sign in</button>
+            <a href="/register" class=" text-info-emphasis">Don't you have an Account?</a>
 
         </form>
     </main>
