@@ -154,7 +154,7 @@
                 </label>
             </div>
             <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
-            
+
         </form>
     </main>
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
