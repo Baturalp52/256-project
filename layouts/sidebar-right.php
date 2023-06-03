@@ -13,24 +13,26 @@
         <div class="card-body">
             <div class="d-flex flex-column gap-1 align-items-center justify-content-center">
                 <div class="list-group w-100">
-                    <a href="#"
-                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center gap-2 ps-1 w-100"
+                    <div class="list-group-item d-flex justify-content-between align-items-center gap-2 p-3 w-100"
                         aria-current="true">
-                        <div class="d-flex gap-1 align-items-center">
+                        <a href="#" class="d-flex gap-1 align-items-center text-decoration-none"
+                            data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Visit User">
                             <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32"
                                 class="rounded-circle">
                             <p class="mb-0">Friend 1</p>
-                        </div>
+                        </a>
                         <div class="d-flex align-items-center justify-content-center gap-1">
-                            <button type="button"
+                            <button type="button" data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-bs-title="Reject User"
                                 class="btn btn-danger rounded-circle p-1 d-flex align-items-center"><iconify-icon
                                     icon="line-md:menu-to-close-transition" width="16"
                                     height="16"></iconify-icon></button>
-                            <button type="button"
+                            <button type="button" data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-bs-title="Accept User"
                                 class="btn btn-success rounded-circle p-1 d-flex align-items-center"><iconify-icon
                                     icon="line-md:confirm" width="16" height="16"></iconify-icon></button>
                         </div>
-                    </a>
+                    </div>
                 </div>
                 <a href="/friend-requests" class="text-decoration-none mx-auto">
                     Show More
