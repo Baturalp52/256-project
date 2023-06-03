@@ -8,7 +8,7 @@
 <body data-bs-theme="dark">
     <?php include("layouts/main.php"); ?>
 
-    <div class="d-flex flex-column align-items-center gap-3" style="padding-top:120px;">
+    <div class="d-flex flex-column align-items-center gap-3">
         <?php for ($number = 0; $number < 3; $number++) { ?>
 
             <div class="card" style="width: 600px;">

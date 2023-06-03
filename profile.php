@@ -6,6 +6,11 @@
 </head>
 
 <body data-bs-theme="dark">
+    <?php include("layouts/main.php"); ?>
+
+
+
+
 
     <?php include("core/scripts.php"); ?>
 </body>

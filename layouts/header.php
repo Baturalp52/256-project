@@ -1,11 +1,19 @@
-<header class="py-3 position-fixed border-bottom w-100 z-3 bg-dark">
+<?php
+
+if (isset($_GET["q"])) {
+    $query_text = filter_var($_GET["q"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+}
+?>
+
+<header class="py-3 position-fixed border-bottom w-100 z-3 bg-dark" style="top:0;left:0;">
     <div class="d-flex align-items-center">
         <div style="width:280px;" class="ps-5">
             <?php include("common/logo.php"); ?>
         </div>
         <div class="d-flex align-items-center flex-fill">
             <form class="w-100" role="search" action="search.php">
-                <input type="search" class="form-control" placeholder="Search..." aria-label="Search" name="q">
+                <input type="search" class="form-control" placeholder="Search..." aria-label="Search" name="q"
+                    value="<?= $query_text ?? "" ?>">
             </form>
         </div>
         <div class="flex-shrink-0 dropdown d-flex justify-content-end pe-5" style="width:320px;">
