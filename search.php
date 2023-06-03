@@ -29,7 +29,7 @@
             <?php for ($number = 0; $number < 9; $number++) { ?>
                 <div class="col my-1">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-body">
                             <div href="#" class="d-flex align-items-center gap-2 text-decoration-none">
                                 <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32"
                                     class="rounded-circle">
