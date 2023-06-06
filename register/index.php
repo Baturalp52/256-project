@@ -2,7 +2,7 @@
 <html lang="en" data-bs-theme="auto">
 
 <head>
-    <?php include("../core/head.php"); ?>
+    <?php include($_SERVER["DOCUMENT_ROOT"] . "/../core/head.php"); ?>
     <style>
         html,
         body {
@@ -39,7 +39,7 @@
 
     <main class="form-signin w-100 m-auto">
         <form>
-            <?php include("../common/logo.php"); ?>
+            <?php include($_SERVER["DOCUMENT_ROOT"] . "/../common/logo.php"); ?>
             <h1 class="h3 mb-3 fw-normal">Please Register</h1>
 
             <div class="form-floating">
@@ -71,7 +71,7 @@
         </form>
     </main>
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-    <?php include("../core/scripts.php"); ?>
+    <?php include($_SERVER["DOCUMENT_ROOT"] . "/../core/scripts.php"); ?>
     <script src="check.js"></script>
 </body>
 

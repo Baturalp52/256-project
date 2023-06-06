@@ -8,7 +8,7 @@ if (isset($_GET["q"])) {
 <header class="py-3 position-fixed border-bottom w-100 z-3 bg-dark" style="top:0;left:0;">
     <div class="d-flex align-items-center">
         <div style="width:280px;" class="ps-5">
-            <?php include("common/logo.php"); ?>
+            <?php include($_SERVER["DOCUMENT_ROOT"]."/common/logo.php"); ?>
         </div>
         <div class="d-flex align-items-center flex-fill">
             <form class="w-100" role="search" action="search.php">
