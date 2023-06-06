@@ -121,17 +121,6 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `name`, `last_name`, `email`, `birth_date`, `picture`, `password`) VALUES
-(2, 'John', 'Doe', 'john.aadoe@example.com', '1990-01-01', 'profile.jpg', 'password123');
-
---
--- Constraints for dumped tables
---
-
---
 -- Constraints for table `comments`
 --
 ALTER TABLE `comments`

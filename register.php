@@ -1,31 +1,41 @@
-<!doctype html>
-<html lang="en" data-bs-theme="auto">
-
 <?php
+session_start();
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-if (!empty($_POST)) {
-    include($_SERVER["DOCUMENT_ROOT"] . "/core/db.php");
-    include($_SERVER["DOCUMENT_ROOT"] . "/models/users.model.php");
-
-    extract($_POST); // email, pass, username
-
-    $user = new UsersModel($db);
-
-    if (!$user->checkUserExists($email)) {
-        // Email already exists
-        $errorMessage = "Email already exists";
-
-    } else {
-        $hashPassw = password_hash($passwordInput, PASSWORD_BCRYPT);
-        $user->create($name, $last_name, $email, $hashPassw);
-
-        // Redirect to the login page
-        header("Location: /feed?register=ok");
+    if (isset($_SESSION["user_id"])) {
+        header("Location: /feed");
         exit;
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!empty($_POST)) {
+        include($_SERVER["DOCUMENT_ROOT"] . "/core/db.php");
+        include($_SERVER["DOCUMENT_ROOT"] . "/models/users.model.php");
+
+        extract($_POST); // email, pass, username
+
+        $user = new UsersModel($db);
+
+        if (!$user->checkUserExists($email)) {
+            // Email already exists
+            $errorMessage = "Email already exists";
+
+        } else {
+            $hashPassw = password_hash($passwordInput, PASSWORD_BCRYPT);
+            $new_user_id = $user->create($name, $last_name, $email, $hashPassw);
+            $_SESSION["user_id"] = $new_user_id;
+
+            // Redirect to the login page
+            header("Location: /profile?register=ok");
+            exit;
+        }
+
     }
 
 }
 ?>
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
 
 <head>
     <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/head.php"); ?>
@@ -106,9 +116,8 @@ if (!empty($_POST)) {
 
         </form>
     </main>
-    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
     <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/scripts.php"); ?>
-    <script src="check.js"></script>
+    <script src="/src/register/js/check.js"></script>
 </body>
 
 </html>

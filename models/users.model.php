@@ -22,6 +22,7 @@ class UsersModel
         $sql = "INSERT INTO users (name,last_name, email, password) values (?,?,?,?)";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$name, $last_name, $email, $password]);
+        return $this->db->lastInsertId();
     }
 
     public function checkUserAuth($email, $rawPass)
@@ -31,7 +32,8 @@ class UsersModel
         if ($stmt->rowCount()) {
             // email exists
             $user = $stmt->fetch();
-            return password_verify($rawPass, $user["password"]);
+            if (password_verify($rawPass, $user["password"]))
+                return $user;
         }
         return false;
     }

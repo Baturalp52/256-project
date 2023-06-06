@@ -1,29 +1,33 @@
+<?php
+session_start();
+include($_SERVER["DOCUMENT_ROOT"] . "/core/db.php");
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    if (isset($_SESSION["user_id"])) {
+        header("Location: feed.php");
+        exit;
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!empty($_POST)) {
+        extract($_POST); // $email, $pass
+        include($_SERVER["DOCUMENT_ROOT"] . "/models/users.model.php");
+        $user = new UsersModel($db);
+        $logged_in_user = $user->checkUserAuth($email, $pass);
+
+        if ($logged_in_user) {
+            // authenticated
+            $_SESSION["user_id"] = $logged_in_user["id"]; // email, hashpassword, namesurname
+            header("Location: feed.php");
+            exit;
+        }
+    }
+}
+?>
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
-    <?php
-  session_start() ;
-  require "db.php" ;  
 
-  // check if the user is already authed.
-  if (isset($_SESSION["user"])) {
-    header("Location: feed.php") ;
-    exit ; 
-  }
-
-  if ( !empty($_POST)) {
-    extract($_POST) ; // $email, $pass
-    if ( checkUser($email, $pass)) {
-        // authenticated
-        $_SESSION["user"] = getUser($email) ;  // email, hashpassword, namesurname
-        header("Location: main.php") ;
-        exit ; 
-    } 
-    echo "<p>Wrong email or password!!</p>" ;
-  }
-?>
 <head>
-    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-    <?php include($_SERVER["DOCUMENT_ROOT"]."/core/head.php"); ?>
+    <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/head.php"); ?>
 
 
     <style>
@@ -121,16 +125,16 @@
 <body class="d-flex align-items-center py-4 bg-body-tertiary" data-bs-theme="dark">
 
     <main class="form-signin w-100 m-auto">
-        <form>
-            <?php include($_SERVER["DOCUMENT_ROOT"]."/common/logo.php"); ?>
+        <form method="post">
+            <?php include($_SERVER["DOCUMENT_ROOT"] . "/common/logo.php"); ?>
             <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
             <div class="form-floating">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email">
                 <label for="floatingInput">Email address</label>
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="pass">
                 <label for="floatingPassword">Password</label>
             </div>
 
@@ -145,8 +149,7 @@
 
         </form>
     </main>
-    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-    <?php include($_SERVER["DOCUMENT_ROOT"]."/core/scripts.php"); ?>
+    <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/scripts.php"); ?>
 </body>
 
 </html>
