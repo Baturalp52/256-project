@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-    <?php include("core/head.php"); ?>
+    <?php include($_SERVER["DOCUMENT_ROOT"]."/core/head.php"); ?>
 </head>
 
 <body data-bs-theme="dark">
-    <?php include("layouts/main.php"); ?>
+    <?php include($_SERVER["DOCUMENT_ROOT"]."/layouts/main.php"); ?>
 
     <div class="mb-3 ms-3">
         <h1 class="display-6 fw-bold d-flex align-items-center gap-2"> <iconify-icon
@@ -44,7 +44,7 @@
 
 
 
-    <?php include("core/scripts.php"); ?>
+    <?php include($_SERVER["DOCUMENT_ROOT"]."/core/scripts.php"); ?>
 </body>
 
 </html>

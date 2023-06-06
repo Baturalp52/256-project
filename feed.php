@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-    <?php include("core/head.php"); ?>
+    <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/head.php"); ?>
 </head>
 
 <body data-bs-theme="dark">
-    <?php include("layouts/main.php"); ?>
+    <?php include($_SERVER["DOCUMENT_ROOT"] . "/layouts/main.php"); ?>
 
     <div class="d-flex flex-column align-items-center gap-3">
         <?php for ($number = 0; $number < 3; $number++) { ?>
@@ -32,7 +32,7 @@
                             Like
                         </div>
                     </a>
-                    <a href="#" class="btn btn-dark text-info">
+                    <a href="post-detail" class="btn btn-dark text-info">
                         <div class="d-flex align-items-center">
                             <iconify-icon icon="line-md:email-twotone" width="24" height="24"></iconify-icon>
                             Comment
@@ -51,7 +51,7 @@
         <?php } ?>
     </div>
 
-    <?php include("core/scripts.php"); ?>
+    <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/scripts.php"); ?>
 </body>
 
 </html>
