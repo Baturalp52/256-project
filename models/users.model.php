@@ -9,8 +9,10 @@ class UsersModel
     }
     public function findOne($id)
     {
-        $find = $this->db->query("SELECT * FROM users WHERE id = $id")->fetch(PDO::FETCH_ASSOC);
-        return $find;
+        $sql = "SELECT * FROM users WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     public function delete($id)
     {

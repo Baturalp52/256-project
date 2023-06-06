@@ -1,3 +1,6 @@
+<?php
+include($_SERVER["DOCUMENT_ROOT"] . "/core/__init__.php");
+?>
 <!DOCTYPE html>
 <html lang="en">
 

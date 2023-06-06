@@ -1,14 +1,23 @@
 <?php
 
-if (isset($_GET["q"])) {
-    $query_text = filter_var($_GET["q"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+if (isset($_SESSION["user_id"])) {
+    $um = new UsersModel($db);
+    $_USER = $um->findOne($_SESSION["user_id"]);
+
+
+    if (isset($_GET["q"])) {
+        $query_text = filter_var($_GET["q"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    }
+
+
 }
 ?>
 
 <header class="py-3 position-fixed border-bottom w-100 z-3 bg-dark" style="top:0;left:0;">
     <div class="d-flex align-items-center">
         <div style="width:280px;" class="ps-5">
-            <?php include($_SERVER["DOCUMENT_ROOT"]."/common/logo.php"); ?>
+            <?php include($_SERVER["DOCUMENT_ROOT"] . "/common/logo.php"); ?>
         </div>
         <div class="d-flex align-items-center flex-fill">
             <form class="w-100" role="search" action="search.php">
@@ -17,10 +26,15 @@ if (isset($_GET["q"])) {
             </form>
         </div>
         <div class="flex-shrink-0 dropdown d-flex justify-content-end pe-5" style="width:320px;">
-            <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+            <a href="#" class="d-flex align-items-center gap-2 link-body-emphasis text-decoration-none dropdown-toggle"
                 data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
-                Name Lastname
+                <?php if ($_USER["picture"]) { ?>
+                    <img src="<?= $_USER["picture"] ?>" alt="mdo" width="32" height="32" class="rounded-circle">
+                <?php } else { ?>
+                    <iconify-icon icon="heroicons:rocket-launch-solid" width="24" height="24"
+                        class="text-danger"></iconify-icon>
+                <?php } ?>
+                <?= $_USER["name"] . " " . $_USER["last_name"] ?>
             </a>
             <ul class="dropdown-menu text-small shadow">
                 <li><a class="dropdown-item" href="/sign-out">Sign out</a></li>
