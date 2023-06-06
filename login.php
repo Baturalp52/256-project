@@ -1,6 +1,26 @@
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
+    <?php
+  session_start() ;
+  require "db.php" ;  
 
+  // check if the user is already authed.
+  if (isset($_SESSION["user"])) {
+    header("Location: feed.php") ;
+    exit ; 
+  }
+
+  if ( !empty($_POST)) {
+    extract($_POST) ; // $email, $pass
+    if ( checkUser($email, $pass)) {
+        // authenticated
+        $_SESSION["user"] = getUser($email) ;  // email, hashpassword, namesurname
+        header("Location: main.php") ;
+        exit ; 
+    } 
+    echo "<p>Wrong email or password!!</p>" ;
+  }
+?>
 <head>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <?php include($_SERVER["DOCUMENT_ROOT"]."/core/head.php"); ?>

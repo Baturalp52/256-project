@@ -1,8 +1,35 @@
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
 
+<?php
+
+if (!empty($_POST)) {
+    include($_SERVER["DOCUMENT_ROOT"] . "/core/db.php");
+    include($_SERVER["DOCUMENT_ROOT"] . "/models/users.model.php");
+
+    extract($_POST); // email, pass, username
+
+    $user = new UsersModel($db);
+
+    if (!$user->checkUserExists($email)) {
+        // Email already exists
+        $errorMessage = "Email already exists";
+
+    } else {
+        $hashPassw = password_hash($passwordInput, PASSWORD_BCRYPT);
+        $user->create($name, $last_name, $email, $hashPassw);
+
+        // Redirect to the login page
+        header("Location: /feed?register=ok");
+        exit;
+    }
+
+}
+?>
+
 <head>
-    <?php include($_SERVER["DOCUMENT_ROOT"] . "/../core/head.php"); ?>
+    <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/head.php"); ?>
+
     <style>
         html,
         body {
@@ -36,30 +63,39 @@
 </head>
 
 <body class="d-flex align-items-center py-4 bg-body-tertiary" data-bs-theme="dark">
-
     <main class="form-signin w-100 m-auto">
-        <form>
-            <?php include($_SERVER["DOCUMENT_ROOT"] . "/../common/logo.php"); ?>
+        <form method="post">
+            <?php include($_SERVER["DOCUMENT_ROOT"] . "/common/logo.php"); ?>
             <h1 class="h3 mb-3 fw-normal">Please Register</h1>
 
             <div class="form-floating">
-                <input type="name" class="form-control" id="inputName" placeholder="name">
+                <input type="name" class="form-control" id="inputName" name="name" placeholder="name">
                 <label for="inputName">Name</label>
             </div>
             <div class="form-floating">
-                <input type="surname" class="form-control" id="inputSurname" placeholder="surname">
+                <input type="surname" class="form-control" id="inputSurname" name="last_name" placeholder="surname">
                 <label for="inputSurname">Surname</label>
             </div>
             <div class="form-floating">
-                <input type="email" class="form-control" id="inputEmail" placeholder="name@example.com">
+                <input type="email" class="form-control" id="inputEmail" name="email" placeholder="name@example.com">
                 <label for="inputEmail">Email address</label>
+
             </div>
+            <?php if (isset($errorMessage)) { ?>
+
+                <span class="text-danger" id="ErrorMessage">
+                    <?= $errorMessage ?>
+                </span>
+            <?php } ?>
+
             <div class="form-floating">
-                <input type="password" class="form-control" id="passwordInput" placeholder="Password">
+                <input type="password" class="form-control" id="passwordInput" name="passwordInput"
+                    placeholder="Password">
                 <label for="passwordInput">Password</label>
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control" id="passwordAgainInput" placeholder="Password Again">
+                <input type="password" class="form-control" id="passwordAgainInput" name="passwordAgainInput"
+                    placeholder="Password Again">
                 <label for="passwordAgainInput">Password Again</label>
             </div>
             <span class="text-danger" id="passwordError" style="display: none;">Please enter matching
@@ -71,7 +107,7 @@
         </form>
     </main>
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-    <?php include($_SERVER["DOCUMENT_ROOT"] . "/../core/scripts.php"); ?>
+    <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/scripts.php"); ?>
     <script src="check.js"></script>
 </body>
 

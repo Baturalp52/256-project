@@ -7,6 +7,14 @@
 
 <body data-bs-theme="dark">
     <?php include($_SERVER["DOCUMENT_ROOT"] . "/layouts/main.php"); ?>
+    <div class="toast <?= isset($_GET["register"]) && $_GET["register"] == "ok" ? "show" : "hide" ?>  position-fixed"
+        style="top:10px;right:10px;z-index:4;" 0 role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">User Created Successfully!</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+
+    </div>
 
     <div class="d-flex flex-column align-items-center gap-3">
         <?php for ($number = 0; $number < 3; $number++) { ?>

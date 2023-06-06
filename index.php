@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
 
-<head>
-    <?php include($_SERVER["DOCUMENT_ROOT"]."/core/head.php"); ?>
-</head>
-
-<body data-bs-theme="dark">
-
-    <?php include($_SERVER["DOCUMENT_ROOT"]."/core/scripts.php"); ?>
-</body>
-
-</html>
+header("Location: register");
+header("Method: POST");
+exit;
+?>
