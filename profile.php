@@ -43,7 +43,6 @@
 
     <div class="d-flex flex-column align-items-center gap-3">
         <?php for ($number = 0; $number < 3; $number++) { ?>
-
             <div class="card" style="width: 600px; margin-top: 12px;">
                 <div class="card-header">
                     <div href="#" class="d-flex align-items-center gap-2 text-decoration-none">
