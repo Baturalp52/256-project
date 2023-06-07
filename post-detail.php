@@ -1,5 +1,4 @@
 <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/__init__.php"); ?>
-
 <?php
 $post_id = $_GET['id'];
 if (!isset($post_id)) {
@@ -7,13 +6,13 @@ if (!isset($post_id)) {
 }
 $obg = new PostsModel($db);
 $post = $obg->findOne($post_id);
-
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/head.php"); ?>
 </head>
 
@@ -27,12 +26,13 @@ $post = $obg->findOne($post_id);
                     <div class="d-flex flex-column">
                         <a href="#" class="d-flex align-items-stretch gap-2 text-decoration-none">Name Lastname</a>
                         <small class="text-body-secondary">1 Jun, 2023</small>
+                        <iconify-icon class="edit" icon="mdi:pen"></iconify-icon>
                     </div>
                 </div>
             </div>
             <img src="<?= $post['image'] ?>" class="card-img-top" alt="...">
             <div class="card-body">
-                <p class="card-text">
+                <p class="card-text postText">
                     <?= $post['text'] ?>
                 </p>
                 <a href="#" class="btn btn-dark text-danger">
@@ -78,6 +78,15 @@ $post = $obg->findOne($post_id);
             <?php } ?>
         </div>
         <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/scripts.php"); ?>
+        <script>
+            $(document).ready(function () {
+                $(".edit").click(function () {
+                    //alert("sa");
+                    $(".postText").replaceWith("<input style='margin:3px 0px; width:100%' class = 'card-text' type='text' name='text' value=<?= $post['text'] ?>><br>");
+                    $(".card-body").append("<button class = 'btn btn-primary'>SAVE</button>");
+                });
+            });
+        </script>
 </body>
 
 </html>
