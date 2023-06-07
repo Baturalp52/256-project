@@ -68,18 +68,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && !empty($_POST)) {
                 </div>
                 <div class="d-flex flex-column flex-grow-1 gap-3">
                     <div class="form-floating">
-                        <input type="text" id="NAME" name="name" required value="<?= $_USER['name'] ?>"
+                        <input type="text" id="NAME" name="name" required
+                            value="<?= filter_var($user['name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?>"
                             class="form-control">
                         <label for="name">Name</label>
                     </div>
                     <div class="form-floating">
-                        <input type="text" id="lastname" name="lastname" required value="<?= $_USER['last_name'] ?>"
+                        <input type="text" id="lastname" name="lastname" required
+                            value="<?= filter_var($user['last_name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?>"
                             class="form-control">
                         <label for="lastname">Lastname</label>
                     </div>
                     <div class="form-floating">
                         <input type="email" class="form-control" id="floatingInput" name="email"
-                            value="<?= $user['email'] ?>">
+                            value="<?= filter_var($user['email'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?>">
                         <label for="floatingInput">Email address</label>
                     </div>
                 </div>
