@@ -7,7 +7,7 @@ if (isset($_SESSION["user_id"])) {
 
 
     if (isset($_GET["q"])) {
-        $query_text = filter_var($_GET["q"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $query_text = $_GET["q"];
     }
 
 
@@ -22,7 +22,7 @@ if (isset($_SESSION["user_id"])) {
         <div class="d-flex align-items-center flex-fill">
             <form class="w-100" role="search" action="search.php">
                 <input type="search" class="form-control" placeholder="Search..." aria-label="Search" name="q"
-                    value="<?= $query_text ?? "" ?>">
+                    value="<?= filter_var($query_text, FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? "" ?>">
             </form>
         </div>
         <div class="flex-shrink-0 dropdown d-flex justify-content-end pe-5" style="width:320px;">

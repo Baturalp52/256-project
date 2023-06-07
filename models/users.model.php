@@ -27,6 +27,27 @@ class UsersModel
         return $this->db->lastInsertId();
     }
 
+    public function searchUsers($text)
+    {
+        $sql = "SELECT * FROM users WHERE name LIKE ? OR last_name LIKE ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(["%" . $text . "%", "%" . $text . "%"]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    }
+    public function findAllWithNoFriend($user_id)
+    {
+        $sql = "SELECT * FROM users u 
+        LEFT JOIN friends f1 ON u.id = f1.inviter_id 
+        LEFT JOIN friends f2 ON u.id = f2.invited_id
+        WHERE NOT u.id = ?
+        ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$user_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    }
+
     public function checkUserAuth($email, $rawPass)
     {
         $stmt = $this->db->prepare("select * from users where email = ?");
