@@ -9,12 +9,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         exit;
     } else {
         $userModel = new UsersModel($db);
-        $postsModel = new PostsModel($db);
+        $postsModel = new PostsModel($db);        
+        $friendModel = new FriendsModel($db);
         if (!isset($id)) {
             $id = $_SESSION["user_id"];
         }
+
         $user = $userModel->findOne($id);
         $posts = $postsModel->getUserPosts($id);
+
+
 
     }
 }
@@ -53,8 +57,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                                 </p>
                             </div>
 
-                            <button type="button" class="btn btn-sm btn-primary col-xl-4"
-                                style="height: 50px;">Add</button>
+                            <?php if (isset($_USER) && $_USER["id"]) { ?>
+                                <?php if (isset($id) && $_USER["id"] !== $id) { ?>
+                                    <?php
+                                    $status = $friendModel-> findstatus($_USER["id"], $id); // Function to get status from the database
+                                    if ($status === 2) {
+                                        $buttonText = "Request Sent";
+                                        $buttonClass = "btn-primary";
+                                        $buttonDisabled = true;
+                                    } elseif ($status === 1) {
+                                        $buttonText = "Remove Friend"; 
+                                        $buttonClass = "btn-danger"; 
+                                        $buttonDisabled = false;
+                                    } elseif ($status === 0) {
+                                        $buttonText = "Request Rejected";
+                                        $buttonClass = "btn-danger";
+                                        $buttonDisabled = true;
+                                    } else {
+                                        $buttonText = "Add Friend";
+                                        $buttonClass = "btn-primary";
+                                        $buttonDisabled = false;
+                                    }
+                                    ?>
+                                   <button type="button" id="<?= $status === 1 ? 'removeFriend' : 'addFriend' ?>"
+                                            class="btn btn-sm <?= $buttonClass ?> col-xl-4 d-flex align-items-center justify-content-center"
+                                            style="height: 50px;" <?= $buttonDisabled ? 'disabled' : '' ?>><?= $buttonText ?></button>
+
+                            
+                                <?php } elseif (!isset($id) || $_USER["id"] === $id) { ?>
+                                    <a href="/settings.php" class="btn btn-sm btn-primary col-xl-4 d-flex align-items-center justify-content-center" style="height: 50px;">Edit</a>
+                                <?php } ?>
+                            <?php } ?>
+
+
                         </div>
 
                         <div class="d-flex rounded-3 p-2 mb-2 col-xl-12 justify-content-between align-items-center">
@@ -150,7 +185,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     <script src="/src/common/js/helpers/show-toast.helper.js" crossorigin="anonymous"></script>
 
     <script>
-        $(".delete-post").on("click", "", function () {
+        
+
+        $(function () {
+
+            $(".delete-post").on("click", "", function () {
             const id = $(this).attr("data-post-id");
             showDeleteModal({
                 title: "Are you sure you want to delete?",
@@ -170,10 +209,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
                     }).fail((...res) => {
                         console.log("Error:", res);
-                    })
+                    });
                 },
             });
-        })
+        });
+
+            $("#addFriend").on("click", "", function () {
+
+
+                $.ajax({
+                    method: "POST",
+                    url: "/friend-requests.php",
+                    data: {
+                        friend_id: <?= filter_var($id, FILTER_SANITIZE_SPECIAL_CHARS) ?>
+                    }
+                }).done(function (data, res, opt) {
+                    if (res === "success")
+                        alert("eklendi");
+                });
+
+            });
+
+    $("#removeFriend").on("click", "", function () {
+
+        $.ajax({
+            method: "DELETE",
+            url: "/remove-friend.php", // PHP script to handle the removal of friend
+            data: {
+                friend_id: <?= filter_var($id, FILTER_SANITIZE_SPECIAL_CHARS) ?>
+            }
+        }).done(function (data, res, opt) {
+            if (res === "success") {
+                alert("Friend removed successfully");
+                location.reload(); // Reload the page after successful removal
+            }
+        });
+
+        });
+});
+
+
     </script>
 </body>
 

@@ -1,3 +1,28 @@
+<?php
+include($_SERVER["DOCUMENT_ROOT"] . "/core/__init__.php");
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Handle GET request
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION["user_id"])) {
+    // Get the inviter and invited IDs
+    extract($_POST);
+    $friendModel = new FriendsModel($db);
+    $inviterId = $_SESSION["user_id"];
+    $invitedId = $friend_id;
+
+
+
+
+    // Call the create function from friends.model.php to add the friend request
+    $friendModel->create($inviterId, $invitedId, 2);
+    header("HTTP/1.1 200 OK");
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
