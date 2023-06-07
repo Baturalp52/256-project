@@ -8,16 +8,18 @@ function getFile($name, $prefix = "default-")
     $date = new DateTime();
 
     $tmpName = $_FILES[$name]["tmp_name"];
-    $fileName = md5($prefix . $date->getTimestamp());
-    $newPath = "/uploads/{$fileName}." . explode("/", $_FILES[$name]['type'])[1];
+    if ($tmpName) {
+        $fileName = md5($prefix . $date->getTimestamp());
+        $newPath = "/uploads/{$fileName}." . explode("/", $_FILES[$name]['type'])[1];
 
-    $res = move_uploaded_file($tmpName, $_SERVER["DOCUMENT_ROOT"] . $newPath);
-    if ($res) {
-        return $newPath;
+        $res = move_uploaded_file($tmpName, $_SERVER["DOCUMENT_ROOT"] . $newPath);
+        if ($res) {
+            return $newPath;
 
+        }
     }
 
-    return false;
+    return "";
 }
 
 ?>

@@ -43,17 +43,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             <div class="card-body p-4">
                 <div class="d-flex text-black position-relative">
                     <div class="position-absolute" style="top:-90px;">
-                        <img class="rounded-circle" src="<?= $user['picture'] ?>" alt="Generic placeholder image"
-                            style="width: 180px;height:180px;object-fit:cover; border-radius: 10px;">
+                    <?php if (isset($user["picture"]) && $user["picture"]) { ?>
+                        <img class="rounded-circle" src="<?= $user['picture'] ?>" alt="<?= filter_var($user["name"] . " " . $user["last_name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?>"
+                            style="width: 180px;height:180px;object-fit:cover;">
+                    <?php } else { ?>
+                        <iconify-icon icon="heroicons:rocket-launch-solid" width="140" height="140" class="text-danger rounded-circle"></iconify-icon>
+                    <?php } ?>
                     </div>
                     <div class="d-flex flex-column" style="margin-left: 200px;">
                         <div class="d-flex flex-row justify-content-between">
                             <div>
                                 <h5 class="mb-1 text-white text-center">
-                                    <?= $user["name"] . " " . $user["last_name"] ?>
+                                    <?= filter_var( $user["name"] . " " . $user["last_name"],FILTER_SANITIZE_FULL_SPECIAL_CHARS )?>
                                 </h5>
                                 <p class="mb-2 pb-1 text-white text-center" style="color: #2b2a2a;">
-                                    <?= $user["birth_date"] ?>
+                                    <?=$user["birth_date"]!=="0000-00-00"? date_format(date_create($user["birth_date"]), 'j, M, Y'):"" ?>
                                 </p>
                             </div>
 
@@ -61,15 +65,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                                 <?php if (isset($id) && $_USER["id"] !== $id) { ?>
                                     <?php
                                     $status = $friendModel-> findstatus($_USER["id"], $id); // Function to get status from the database
-                                    if ($status === 2) {
+                                    
+                                    if ($status == 2) {
                                         $buttonText = "Request Sent";
                                         $buttonClass = "btn-primary";
                                         $buttonDisabled = true;
-                                    } elseif ($status === 1) {
+                                    } elseif ($status == 1) {
                                         $buttonText = "Remove Friend"; 
                                         $buttonClass = "btn-danger"; 
                                         $buttonDisabled = false;
-                                    } elseif ($status === 0) {
+                                    } elseif ($status == 0) {
                                         $buttonText = "Request Rejected";
                                         $buttonClass = "btn-danger";
                                         $buttonDisabled = true;
@@ -79,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                                         $buttonDisabled = false;
                                     }
                                     ?>
-                                   <button type="button" id="<?= $status === 1 ? 'removeFriend' : 'addFriend' ?>"
+                                   <button type="button" id="<?= $status == 1 ? 'removeFriend' : 'addFriend' ?>"
                                             class="btn btn-sm <?= $buttonClass ?> col-xl-4 d-flex align-items-center justify-content-center"
                                             style="height: 50px;" <?= $buttonDisabled ? 'disabled' : '' ?>><?= $buttonText ?></button>
 
@@ -182,8 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     </div>
 
     <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/scripts.php"); ?>
-    <script src="/src/common/js/helpers/show-delete-modal.helper.js" crossorigin="anonymous"></script>
-    <script src="/src/common/js/helpers/show-toast.helper.js" crossorigin="anonymous"></script>
+    
 
     <script>
         
@@ -216,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         });
 
             $("#addFriend").on("click", "", function () {
-
+                const btn = $(this);
 
                 $.ajax({
                     method: "POST",
@@ -226,23 +230,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     }
                 }).done(function (data, res, opt) {
                     if (res === "success")
-                        alert("eklendi");
+                     showToast({
+                     title: "",
+            description: "Friend invititation sent successfully!",
+            color: "success",
+                        });
+                        btn.attr("disabled");
                 });
 
             });
 
     $("#removeFriend").on("click", "", function () {
-
+ const btn = $(this);
         $.ajax({
             method: "DELETE",
-            url: "/remove-friend.php", // PHP script to handle the removal of friend
+            url: "/friend-requests.php", // PHP script to handle the removal of friend
             data: {
-                friend_id: <?= filter_var($id, FILTER_SANITIZE_SPECIAL_CHARS) ?>
+                inviter_id: <?= filter_var($id, FILTER_SANITIZE_SPECIAL_CHARS) ?>
             }
         }).done(function (data, res, opt) {
             if (res === "success") {
-                alert("Friend removed successfully");
-                location.reload(); // Reload the page after successful removal
+                showToast({
+                     title: "",
+            description: "Friend removed successfully!",
+            color: "success",
+                        });
+                        btn.attr("disabled");
             }
         });
 

@@ -16,7 +16,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION["user_id"])) {
 
 
     // Call the create function from friends.model.php to add the friend request
-    $friendModel->create($inviterId, $invitedId, 2);
+    $friendModel->create($inviterId, $invitedId);
+    header("HTTP/1.1 200 OK");
+    exit();
+}
+if ($_SERVER['REQUEST_METHOD'] === 'PATCH' && isset($_SESSION["user_id"])) {
+    // Get the inviter and invited IDs
+    parse_str(file_get_contents('php://input'), $_PATCH);
+    $friendModel = new FriendsModel($db);
+
+    // Call the update function from friends.model.php to add the friend request
+    $friendModel->update($_PATCH["inviter_id"], $_SESSION["user_id"], 1);
+    header("HTTP/1.1 200 OK");
+    exit();
+}
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_SESSION["user_id"])) {
+    parse_str(file_get_contents('php://input'), $_DELETE);
+    $friendModel = new FriendsModel($db);
+
+    // Call the update function from friends.model.php to add the friend request
+    $friendModel->update($_DELETE["inviter_id"], $_SESSION["user_id"], 0);
     header("HTTP/1.1 200 OK");
     exit();
 }
@@ -39,23 +58,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION["user_id"])) {
         </h1>
     </div>
     <div class="d-flex flex-column gap-2 align-items-center mb-3">
-        <?php for ($number = 0; $number < 9; $number++) { ?>
-            <div class="card w-50">
+        <?php foreach ($friend_requests as $request) { ?>
+            <div class="card w-50" data-inviter-id="<?= $request["users.id"] ?>">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center" aria-current="true">
-                        <a href="#" class="d-flex gap-1 align-items-center text-decoration-none" data-bs-toggle="tooltip"
+                        <a href="/profile.php?id=<?= $request["users.id"] ?>"
+                            class="d-flex gap-1 align-items-center text-decoration-none" data-bs-toggle="tooltip"
                             data-bs-placement="top" data-bs-title="Visit User">
-                            <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
-                            <p class="mb-0">Friend 1</p>
+                            <?php if (isset($request["user.picture"])) { ?>
+                                <img src="<?= $request["user.picture"] ?>" alt="mdo" width="32" height="32"
+                                    class="rounded-circle">
+                            <?php } else { ?>
+                                <iconify-icon icon="heroicons:rocket-launch-solid" width="32" height="32"
+                                    class="text-danger"></iconify-icon>
+                            <?php } ?>
+                            <p class="mb-0" style="font-size:12px">
+                                <?= filter_var($request["users.name"] . " " . $request["users.last_name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?>
+                            </p>
                         </a>
                         <div class="d-flex align-items-center justify-content-center gap-1">
-                            <button type="button" data-bs-toggle="tooltip" data-bs-placement="top"
-                                data-bs-title="Reject User"
-                                class="btn btn-danger rounded-circle p-1 d-flex align-items-center"><iconify-icon
+                            <button type="button" data-inviter-id="<?= $request["users.id"] ?>"
+                                class="btn btn-danger rounded-circle p-1 d-flex align-items-center reject-request"><iconify-icon
                                     icon="line-md:menu-to-close-transition" width="24" height="24"></iconify-icon></button>
-                            <button type="button" data-bs-toggle="tooltip" data-bs-placement="top"
-                                data-bs-title="Accept User"
-                                class="btn btn-success rounded-circle p-1 d-flex align-items-center"><iconify-icon
+                            <button type="button" data-inviter-id="<?= $request["users.id"] ?>"
+                                class="btn btn-success rounded-circle p-1 d-flex align-items-center accept-request"><iconify-icon
                                     icon="line-md:confirm" width="24" height="24"></iconify-icon></button>
                         </div>
                     </div>

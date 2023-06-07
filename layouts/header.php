@@ -34,7 +34,7 @@ if (isset($_SESSION["user_id"])) {
                     <iconify-icon icon="heroicons:rocket-launch-solid" width="24" height="24"
                         class="text-danger"></iconify-icon>
                 <?php } ?>
-                <?= $_USER["name"] . " " . $_USER["last_name"] ?>
+                <?= filter_var($_USER["name"] . " " . $_USER["last_name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?>
             </a>
             <ul class="dropdown-menu text-small shadow">
                 <li><a class="dropdown-item" href="/sign-out.php">Sign out</a></li>

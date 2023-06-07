@@ -140,7 +140,6 @@ if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
             <?php } ?>
         </div>
         <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/scripts.php"); ?>
-        <script src="/src/common/js/helpers/show-delete-modal.helper.js" crossorigin="anonymous"></script>
         <script>
             $(document).ready(function () {
                 $("#edit").on("click", "", function () {
@@ -196,7 +195,8 @@ if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
                     textArea.id = "newText";
                     textArea.name = "newText";
                     textArea.rows = "3";
-                    textArea.innerText = "<?= $post["text"] ?>";
+
+                    textArea.innerHTML = "<?= filter_var($post["text"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?>";
 
                     const btnContainer = document.createElement("div");
                     btnContainer.className = "mt-2 text-end";
@@ -213,7 +213,7 @@ if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
                     cancelBtn.onclick = function () {
                         const text = document.createElement("p");
                         text.className = "card-text";
-                        text.innerText = "<?= filter_var($post['text'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?>";
+                        text.innerHTML = "<?= filter_var($post['text'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?>";
 
                         $(form).replaceWith(text);
                         $(newImageOverlay).remove();

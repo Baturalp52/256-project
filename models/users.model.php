@@ -40,9 +40,14 @@ class UsersModel
     }
 
 
-    public function searchUsers($text)
+    public function searchUsers($text, $user_id)
     {
         $sql = "SELECT * FROM users WHERE name LIKE ? OR last_name LIKE ?";
+
+        if ($user_id)
+            $sql = "SELECT *, EXISTS(SELECT * FROM friends WHERE inviter_id IN ($user_id, users.id) AND invited_id IN ($user_id, users.id) ) \"is_friend\" 
+        FROM users WHERE (name LIKE ? OR last_name LIKE ?) AND NOT users.id = $user_id";
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute(["%" . $text . "%", "%" . $text . "%"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -50,13 +55,12 @@ class UsersModel
     }
     public function findAllWithNoFriend($user_id)
     {
-        $sql = "SELECT * FROM users u 
-        LEFT JOIN friends f1 ON u.id = f1.inviter_id 
-        LEFT JOIN friends f2 ON u.id = f2.invited_id
-        WHERE NOT u.id = ?
+        $sql = "SELECT * FROM users
+        WHERE NOT EXISTS(SELECT * FROM friends WHERE inviter_id IN ($user_id, users.id) AND invited_id IN ($user_id, users.id))
+        AND NOT users.id = $user_id
         ";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([$user_id]);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     }

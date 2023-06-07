@@ -12,7 +12,7 @@
     $um = new UsersModel($db);
 
     if (isset($query_text) && $query_text) {
-        $search_users = $um->searchUsers($query_text);
+        $search_users = $um->searchUsers($query_text, $_SESSION["user_id"]);
     } else {
         $search_users = $um->findAllWithNoFriend($_USER["id"]);
     }
@@ -49,12 +49,14 @@
                                         class="text-danger"></iconify-icon>
                                 <?php } ?>
                                 <div class="d-flex flex-column">
-                                    <a href="#" class="d-flex align-items-stretch gap-2 text-decoration-none">
-                                        <?= $user["name"] . " " . $user["last_name"] ?>
+                                    <a href="/profile.php?id=<?= $user["id"] ?>"
+                                        class="d-flex align-items-stretch gap-2 text-decoration-none">
+                                        <?= filter_var($user["name"] . " " . $user["last_name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?>
                                     </a>
                                 </div>
-                                <button class="btn btn-primary d-flex align-items-center ms-auto"
-                                    type="button"><iconify-icon icon="line-md:account-add"></iconify-icon>Add</button>
+                                <button class="btn btn-primary d-flex align-items-center ms-auto add-friend"
+                                    data-user-id="<?= $user["id"] ?>" type="button" <?= isset($user["is_friend"]) && $user["is_friend"] ? "disabled" : "" ?>><iconify-icon
+                                        icon="line-md:account-add"></iconify-icon>Add</button>
                             </div>
                         </div>
                     </div>
@@ -76,6 +78,8 @@
 
 
     <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/scripts.php"); ?>
+    <script src="/src/common/js/side-bar-right/actions.js" crossorigin="anonymous"></script>
+    <script src="/src/common/js/search/actions.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
