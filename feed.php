@@ -10,15 +10,6 @@ include($_SERVER["DOCUMENT_ROOT"] . "/core/__init__.php");
 
 <body data-bs-theme="dark">
     <?php include($_SERVER["DOCUMENT_ROOT"] . "/layouts/main.php"); ?>
-    <div class="toast <?= isset($_GET["register"]) && $_GET["register"] == "ok" ? "show" : "hide" ?>  position-fixed"
-        style="top:10px;right:10px;z-index:4;" 0 role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <strong class="me-auto">User Created Successfully!</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-
-    </div>
-
     <div class="d-flex flex-column align-items-center gap-3">
         <a href="new-post.php"
             class="btn btn-outline-primary border border-2 border-primary d-flex align-items-center justify-content-center"
@@ -54,12 +45,6 @@ include($_SERVER["DOCUMENT_ROOT"] . "/core/__init__.php");
                             Comment
                         </div>
                     </a>
-                    <a href="#" class="btn btn-dark text-warning">
-                        <div class="d-flex align-items-center">
-                            <iconify-icon icon="line-md:telegram" width="24" height="24"></iconify-icon>
-                            Share
-                        </div>
-                    </a>
                 </div>
             </div>
 
@@ -68,6 +53,20 @@ include($_SERVER["DOCUMENT_ROOT"] . "/core/__init__.php");
     </div>
 
     <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/scripts.php"); ?>
+    <?php
+    if (isset($_GET) && isset($_GET["alert"])) {
+        ?>
+        <script src="/src/common/js/helpers/show-toast.helper.js" crossorigin="anonymous"></script>
+        <script>
+            $(function () {
+                showToast({
+                    title: "",
+                    description: "<?= $_GET["alert"] == 1 ? "Post deleted successfully!" : "" ?>",
+                    color: "<?= $_GET["alert"] == 1 ? "danger" : "" ?>"
+                });
+            });
+        </script>
+    <?php } ?>
 </body>
 
 </html>

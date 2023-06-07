@@ -26,11 +26,28 @@ class PostsModel
         $stmt->execute([$text, $image, $id]);
     }
 
-    public function findOne($id)
+    public function findOne($id, $user_id = 0)
     {
-        $query = "SELECT * FROM posts WHERE id = ?";
+        $query = "SELECT p.*, u.picture as \"user.picture\", u.name as \"user.name\",
+        u.last_name as \"user.last_name\"
+          FROM posts p 
+        JOIN users u ON p.user_id = u.id
+        WHERE p.id = ?";
+
+        if ($user_id) {
+            $query = "SELECT p.*, u.picture as \"user.picture\", u.name as \"user.name\",
+        u.last_name as \"user.last_name\",
+        EXISTS(SELECT * FROM post_likes WHERE post_id = ? AND user_id = ?) \"is_liked\"
+          FROM posts p 
+        JOIN users u ON p.user_id = u.id
+        WHERE p.id = ?";
+        }
+
         $stmt = $this->db->prepare($query);
-        $post = $stmt->execute([$id]);
+        if ($user_id)
+            $post = $stmt->execute([$id, $user_id, $id]);
+        else
+            $post = $stmt->execute([$id]);
         $post = $stmt->fetch(PDO::FETCH_ASSOC);
         return $post;
     }
@@ -42,6 +59,24 @@ class PostsModel
         $stmt->execute([$user_id]);
         $postsArr = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $postsArr;
+    }
+    public function getUserPosts($user_id)
+    {
+        $query = "SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$user_id]);
+        $postsArr = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $postsArr;
+    }
+    public function checkUserOwnPost($user_id, $post_id)
+    {
+        $query = "SELECT id FROM posts WHERE user_id = ? AND id = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$user_id, $post_id]);
+        $rowCount = $stmt->fetchColumn();
+        if ($rowCount > 0)
+            return true;
+        return false;
     }
 }
 ?>
