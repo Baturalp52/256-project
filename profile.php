@@ -62,6 +62,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     </div>
 
     <div class="d-flex flex-column align-items-center gap-3">
+        <?php if (!isset($id) || $id == $_USER["id"]) { ?>
+            <a href="new-post.php"
+                class="btn btn-outline-primary border border-2 border-primary d-flex align-items-center justify-content-center mt-3"
+                style="width:600px;border-style:dashed!important;"><iconify-icon icon="line-md:plus" width="24"
+                    height="24"></iconify-icon> Create New
+                Post</a>
+        <?php } ?>
         <?php for ($number = 0; $number < 3; $number++) { ?>
             <div class="card" style="width: 600px; margin-top: 12px;">
                 <div class="card-header">

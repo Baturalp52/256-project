@@ -20,6 +20,11 @@ include($_SERVER["DOCUMENT_ROOT"] . "/core/__init__.php");
     </div>
 
     <div class="d-flex flex-column align-items-center gap-3">
+        <a href="new-post.php"
+            class="btn btn-outline-primary border border-2 border-primary d-flex align-items-center justify-content-center"
+            style="width:600px;border-style:dashed!important;"><iconify-icon icon="line-md:plus" width="24"
+                height="24"></iconify-icon> Create New
+            Post</a>
         <?php for ($number = 0; $number < 3; $number++) { ?>
 
             <div class="card" style="width: 600px;">
