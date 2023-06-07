@@ -53,8 +53,8 @@
                                         <?= $user["name"] . " " . $user["last_name"] ?>
                                     </a>
                                 </div>
-                                <button class="btn btn-primary d-flex align-items-center" type="button"><iconify-icon
-                                        icon="line-md:account-add"></iconify-icon>Add</button>
+                                <button class="btn btn-primary d-flex align-items-center ms-auto"
+                                    type="button"><iconify-icon icon="line-md:account-add"></iconify-icon>Add</button>
                             </div>
                         </div>
                     </div>

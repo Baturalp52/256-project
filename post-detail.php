@@ -28,7 +28,6 @@ if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
 
     if ($is_post_owned) {
         $pm->deletePost($post_id);
-        $post = $pm->findOne($post_id);
         header("HTTP/1.1 200 OK");
         exit();
     }
@@ -100,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
                 <p class="card-text">
                     <?= filter_var($post['text'], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?>
                 </p>
-                <a href="#" class="btn btn-dark text-danger">
+                <button class="btn btn-dark text-danger" id="like">
                     <div class="d-flex align-items-center">
                         <?php if ($post["is_liked"]) { ?>
                             <iconify-icon icon="line-md:heart-filled" width="24" height="24"></iconify-icon>
@@ -109,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
                         <?php } ?>
                         Like
                     </div>
-                </a>
+                </button>
                 <a href="#" class="btn btn-dark text-info">
                     <div class="d-flex align-items-center">
                         <iconify-icon icon="line-md:email-twotone" width="24" height="24"></iconify-icon>
@@ -252,11 +251,30 @@ if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
                             })
                         },
                     });
+                });
+
+                $("#like").on("click", "", function () {
+                    $.ajax({
+                        method: "POST",
+                        url: "/like-post.php",
+                        data: {
+                            post_id: <?= $post_id ?>
+                        }
+                    }).done((d, res, o) => {
+                        if (res === "success") {
+                            const icon = $(this).find("iconify-icon").attr("icon");
+                            $(this).find("iconify-icon").attr("icon", icon === "line-md:heart" ? "line-md:heart-filled" : "line-md:heart");
+                        }
+                    }).fail((...res) => {
+                        console.log("Error:", res);
+                    })
+
+                });
 
 
 
 
-                })
+
             });
         </script>
 </body>
