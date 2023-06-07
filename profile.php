@@ -1,10 +1,16 @@
 <?php
+include($_SERVER["DOCUMENT_ROOT"] . "/core/__init__.php");
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    session_start();
 
-    if (!isset($_SESSION["user_id"])) {
+    extract($_GET);
+
+    if (!isset($id) && !isset($_SESSION["user_id"])) {
         header("Location: /login.php");
         exit;
+    } else {
+        $userModel = new UsersModel($db);
+        $user = $userModel->findOne(isset($id) ? $id : $_SESSION["user_id"]);
+
     }
 }
 ?>
@@ -23,15 +29,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             <div class="card-body p-4">
                 <div class="d-flex text-black position-relative">
                     <div class="position-absolute" style="top:-90px;">
-                        <img class="rounded-circle"
-                            src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
-                            alt="Generic placeholder image" style="width: 180px; border-radius: 10px;">
+                        <img class="rounded-circle" src="<?= $user['picture'] ?>" alt="Generic placeholder image"
+                            style="width: 180px; border-radius: 10px;">
                     </div>
                     <div class="d-flex flex-column" style="margin-left: 200px;">
                         <div class="d-flex flex-row justify-content-between">
                             <div>
-                                <h5 class="mb-1 text-white text-center">Danny McLoan</h5>
-                                <p class="mb-2 pb-1 text-white text-center" style="color: #2b2a2a;">31/12/2031</p>
+                                <h5 class="mb-1 text-white text-center">
+                                    <?= $user["name"] . " " . $user["last_name"] ?>
+                                </h5>
+                                <p class="mb-2 pb-1 text-white text-center" style="color: #2b2a2a;">
+                                    <?= $user["birth_date"] ?>
+                                </p>
                             </div>
 
                             <button type="button" class="btn btn-sm btn-primary col-xl-4"
@@ -59,7 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     <div href="#" class="d-flex align-items-center gap-2 text-decoration-none">
                         <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
                         <div class="d-flex flex-column">
-                            <a href="#" class="d-flex align-items-stretch gap-2 text-decoration-none">Name Lastname</a>
+                            <a href="#" class="d-flex align-items-stretch gap-2 text-decoration-none">
+                                <?= $user["name"] . " " . $user["last_name"] ?>
+                            </a>
                             <small class="text-body-secondary">1 Jun, 2023</small>
                         </div>
                     </div>
