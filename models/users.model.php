@@ -27,13 +27,13 @@ class UsersModel
         return $this->db->lastInsertId();
     }
 
-    public function update_User($userId, $name, $last_name, $email, $birthday, $password)
+    public function update_User($userId, $name, $last_name, $email, $birthday, $bio)
     {
-        $sql = "UPDATE users SET name=?, last_name=?, email=?,birthday=?, password=? WHERE id=?";
+        $sql = "UPDATE users SET name=?, last_name=?, email=?, birth_date=?, bio=? WHERE id=?";
 
         // Assuming you have a database connection object stored in the variable $conn
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([$name, $last_name, $email, $birthday, $password]);
+        $stmt->execute([$name, $last_name, $email, $birthday, $bio, $userId]);
 
 
         // Additional code if needed, such as error handling or success messages
@@ -85,6 +85,13 @@ class UsersModel
 
         return true;
     }
-
+    public function changePassword($id, $newPass)
+    {
+        $query = "UPDATE users SET password = ? WHERE id = ?";
+        $stmt = $this->db->prepare($query);
+        $hashPassw = password_hash($newPass, PASSWORD_BCRYPT);
+        $stmt->execute([$hashPassw, $id]);
+        return true;
+    }
 }
 ?>

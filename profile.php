@@ -110,9 +110,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         <?php if ($id == $_SESSION["user_id"]) { ?>
             <a href="new-post.php"
                 class="btn btn-outline-primary border border-2 border-primary d-flex align-items-center justify-content-center mt-3"
-                style="width:600px;border-style:dashed!important;"><iconify-icon icon="line-md:plus" width="24"
-                    height="24"></iconify-icon> Create New
-                Post</a>
+                style="width:600px;border-style:dashed!important;">
+                <iconify-icon icon="line-md:plus" width="24" height="24"></iconify-icon> Create New
+                Post
+            </a>
         <?php } ?>
         <?php foreach ($posts as $post) { ?>
             <div class="card" style="width: 600px; margin-top: 12px;" data-post-id="<?= $post["id"] ?>">
@@ -121,8 +122,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                         <img src="<?= filter_var($user["picture"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?>" alt="mdo" width="32"
                             height="32" class="rounded-circle">
                     <?php } else { ?>
-                        <iconify-icon icon="heroicons:rocket-launch-solid" width="32" height="32"
-                            class="text-danger"></iconify-icon>
+                        <iconify-icon icon="heroicons:rocket-launch-solid" width="32" height="32" class="text-danger">
+                        </iconify-icon>
                     <?php } ?>
                     <div class="d-flex flex-column">
                         <a href="/profile.php?<?= $user["id"] ?>"
