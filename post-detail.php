@@ -1,15 +1,25 @@
+<?php include($_SERVER["DOCUMENT_ROOT"] . "/core/__init__.php"); ?>
+
+<?php
+$post_id = $_GET['id'];
+if (!isset($post_id)) {
+    header("Location: feed.php");
+}
+$obg = new PostsModel($db);
+$post = $obg->findOne($post_id);
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <?php include("../core/head.php"); ?>
+
+    <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/head.php"); ?>
 </head>
 
 <body data-bs-theme="dark">
-    <?php include("../layouts/main.php"); ?>
-
+    <?php include($_SERVER["DOCUMENT_ROOT"] . "/layouts/main.php"); ?>
     <div class="d-flex flex-column mx-auto align-items-stretch gap-5" style="width: 800px;">
-
         <div class="card">
             <div class="card-header">
                 <div href="#" class="d-flex align-items-center gap-2 text-decoration-none">
@@ -20,11 +30,11 @@
                     </div>
                 </div>
             </div>
-            <img src="/src/images/background.jpg" class="card-img-top" alt="...">
+            <img src="<?= $post['image'] ?>" class="card-img-top" alt="...">
             <div class="card-body">
-                <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem sint ipsam
-                    inventore ea? Iusto debitis sequi placeat mollitia, ex velit harum nesciunt ea sunt provident dicta
-                    incidunt assumenda soluta molestias.</p>
+                <p class="card-text">
+                    <?= $post['text'] ?>
+                </p>
                 <a href="#" class="btn btn-dark text-danger">
                     <div class="d-flex align-items-center">
                         <iconify-icon icon="line-md:heart-filled" width="24" height="24"></iconify-icon>
@@ -67,8 +77,7 @@
                 </div>
             <?php } ?>
         </div>
-
-        <?php include("../core/scripts.php"); ?>
+        <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/scripts.php"); ?>
 </body>
 
 </html>
