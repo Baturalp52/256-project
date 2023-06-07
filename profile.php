@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 Post</a>
         <?php } ?>
         <?php foreach ($posts as $post) { ?>
-            <div class="card" style="width: 600px; margin-top: 12px;">
+            <div class="card" style="width: 600px; margin-top: 12px;" data-post-id="<?= $post["id"] ?>">
                 <div class="card-header d-flex align-items-center gap-2 text-decoration-none">
                     <?php if (isset($user["picture"])) { ?>
                         <img src="<?= filter_var($user["picture"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?>" alt="mdo" width="32"
@@ -106,7 +106,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="/post-detail.php?id=<?= $post["id"] ?>">Edit</a></li>
-                            <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
+                            <li><button type="button" class="dropdown-item text-danger delete-post"
+                                    data-post-id="<?= $post["id"] ?>">Delete</button>
+                            </li>
                         </ul>
                     </div>
 
@@ -122,7 +124,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     </p>
                     <a href="#" class="btn btn-dark text-danger">
                         <div class="d-flex align-items-center">
-                            <iconify-icon icon="line-md:heart-filled" width="24" height="24"></iconify-icon>
+                            <?php if ($post["is_liked"]) { ?>
+                                <iconify-icon icon="line-md:heart-filled" width="24" height="24"></iconify-icon>
+                            <?php } else { ?>
+                                <iconify-icon icon="line-md:heart" width="24" height="24"></iconify-icon>
+                            <?php } ?>
                             Like
                         </div>
                     </a>
@@ -140,6 +146,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     </div>
 
     <?php include($_SERVER["DOCUMENT_ROOT"] . "/core/scripts.php"); ?>
+    <script src="/src/common/js/helpers/show-delete-modal.helper.js" crossorigin="anonymous"></script>
+    <script src="/src/common/js/helpers/show-toast.helper.js" crossorigin="anonymous"></script>
+
+    <script>
+        $(".delete-post").on("click", "", function () {
+            const id = $(this).attr("data-post-id");
+            showDeleteModal({
+                title: "Are you sure you want to delete?",
+                onAccept: function () {
+                    $.ajax({
+                        method: "DELETE",
+                        url: `/post-detail.php?id=${id}`,
+                    }).done((d, res, o) => {
+                        if (res === "success") {
+                            showToast({
+                                title: "",
+                                description: "Post deleted successfully!",
+                                color: "danger"
+                            });
+                            $(`[data-post-id=${id}]`).remove();
+                        }
+
+                    }).fail((...res) => {
+                        console.log("Error:", res);
+                    })
+                },
+            });
+        })
+    </script>
 </body>
 
 </html>

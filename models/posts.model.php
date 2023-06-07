@@ -32,22 +32,19 @@ class PostsModel
         u.last_name as \"user.last_name\"
           FROM posts p 
         JOIN users u ON p.user_id = u.id
-        WHERE p.id = ?";
+        WHERE p.id = $id";
 
         if ($user_id) {
             $query = "SELECT p.*, u.picture as \"user.picture\", u.name as \"user.name\",
         u.last_name as \"user.last_name\",
-        EXISTS(SELECT * FROM post_likes WHERE post_id = ? AND user_id = ?) \"is_liked\"
+        EXISTS(SELECT * FROM post_likes WHERE post_id = $id AND user_id = $user_id) \"is_liked\"
           FROM posts p 
         JOIN users u ON p.user_id = u.id
-        WHERE p.id = ?";
+        WHERE p.id = $id";
         }
 
         $stmt = $this->db->prepare($query);
-        if ($user_id)
-            $post = $stmt->execute([$id, $user_id, $id]);
-        else
-            $post = $stmt->execute([$id]);
+        $post = $stmt->execute();
         $post = $stmt->fetch(PDO::FETCH_ASSOC);
         return $post;
     }
@@ -62,7 +59,7 @@ class PostsModel
     }
     public function getUserPosts($user_id)
     {
-        $query = "SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC";
+        $query = "SELECT *, EXISTS(SELECT * FROM post_likes WHERE post_id = p.id AND user_id = $user_id) \"is_liked\" FROM posts p WHERE user_id = ? ORDER BY created_at DESC";
         $stmt = $this->db->prepare($query);
         $stmt->execute([$user_id]);
         $postsArr = $stmt->fetchAll(PDO::FETCH_ASSOC);
